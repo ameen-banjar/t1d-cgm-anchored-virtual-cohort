@@ -174,8 +174,8 @@ and creates a compressed archive without absolute local paths. The
 - Temporal-TAR matching reduced held-out HBGI bias but did not achieve
   equivalence
 - In the independent 17-participant T1D-UOM cohort (`N=16` under primary QC),
-  whole-day conclusions replicated while nocturnal/dawn risk remained
-  non-equivalent
+  external transport validation showed the same claim pattern: whole-day
+  equivalence with non-equivalent nocturnal/dawn risk
 
 Diurnal completeness uses all calendar days from the first through the last
 observation, collapses exact duplicate timestamps, and caps daily counts at
