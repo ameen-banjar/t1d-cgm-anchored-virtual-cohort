@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -5,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from t1d_virtual_cohort.diurnal import _coverage
+from t1d_virtual_cohort.io import read_trace
 from t1d_virtual_cohort.matching import match_members
 from t1d_virtual_cohort.metrics import gmi_percent, risk_indices
 from t1d_virtual_cohort.pipeline import (
@@ -15,6 +17,20 @@ from t1d_virtual_cohort.statistics import paired_tost
 
 
 class CoreTests(unittest.TestCase):
+    def test_read_trace_accepts_processed_ts_column(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "trace.csv"
+            pd.DataFrame(
+                {
+                    "ts": ["2025-01-01 00:00:00", "2025-01-01 00:05:00"],
+                    "glucose_mgdl": [100.0, 105.0],
+                }
+            ).to_csv(path, index=False)
+            trace = read_trace(path)
+
+        self.assertEqual(list(trace.columns), ["timestamp", "glucose_mgdl"])
+        self.assertTrue(pd.api.types.is_datetime64_any_dtype(trace["timestamp"]))
+
     def test_gmi_is_deterministic_function_of_mean(self):
         self.assertAlmostEqual(gmi_percent(100), 5.702)
 

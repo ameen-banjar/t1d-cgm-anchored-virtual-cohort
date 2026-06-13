@@ -67,7 +67,9 @@ def read_virtual_summary(path: str | Path) -> pd.DataFrame:
 
 def read_trace(path: str | Path) -> pd.DataFrame:
     df = pd.read_csv(path)
-    time_col = next((c for c in ["timestamp", "Time", "Datetime"] if c in df), None)
+    time_col = next(
+        (c for c in ["timestamp", "ts", "Time", "Datetime"] if c in df), None
+    )
     glucose_col = next((c for c in ["glucose_mgdl", "CGM", "Glucose"] if c in df), None)
     if time_col is None or glucose_col is None:
         raise ValueError(f"Trace {path} must contain time and glucose columns")

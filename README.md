@@ -120,6 +120,31 @@ PYTHONPATH=src python3 scripts/evaluate_temporal_matching.py \
   --output outputs/tables
 ```
 
+An independent-cohort validation can be run when locally authorized processed
+traces are available:
+
+```bash
+PYTHONPATH=src python3 scripts/run_external_validation.py \
+  --external-traces /authorized/path/to/processed_external_traces \
+  --development-summary data/raw/real_summary.csv \
+  --virtual-summary data/derived/virtual_profile_summary.csv \
+  --virtual-traces data/raw/virtual_traces \
+  --output outputs
+```
+
+The external analysis freezes normalization on the original Granada cohort
+and virtual library. It excludes glucose outside 40--400 mg/dL, removes
+prolonged constant-value runs, and reports sensitivity to 2-, 6-, and
+24-hour flatline definitions. Participant-level QC remains under
+`outputs/private/`. The current processed traces correspond to the
+17-participant T1D-UOM Manchester cohort described by Alsuhaymi et al.
+(`Scientific Data`, 2025; DOI
+[`10.1038/s41597-025-05695-1`](https://doi.org/10.1038/s41597-025-05695-1));
+the source dataset is archived at
+[`10.5281/zenodo.15806142`](https://doi.org/10.5281/zenodo.15806142).
+The local `Train_*` files are processed 5-minute derivatives rather than the
+original device-export files, so reports must preserve that distinction.
+
 ## Virtual Trace Release
 
 To prepare the simulator-only traces for Zenodo:
@@ -148,6 +173,9 @@ and creates a compressed archive without absolute local paths. The
 - Dawn LBGI: paired TOST equivalent, but not robust to cluster bootstrap
 - Temporal-TAR matching reduced held-out HBGI bias but did not achieve
   equivalence
+- In the independent 17-participant T1D-UOM cohort (`N=16` under primary QC),
+  whole-day conclusions replicated while nocturnal/dawn risk remained
+  non-equivalent
 
 Diurnal completeness uses all calendar days from the first through the last
 observation, collapses exact duplicate timestamps, and caps daily counts at

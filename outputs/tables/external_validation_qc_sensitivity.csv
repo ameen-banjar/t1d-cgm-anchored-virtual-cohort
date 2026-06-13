@@ -1,0 +1,4 @@
+flatline_threshold_hours,source_n,whole_day_qualified_n,diurnal_qualified_n,median_whole_day_completeness,minimum_whole_day_completeness,range_excluded_total,flatline_excluded_total,selected_members,mean_distance
+2.0,17,16,15,0.9851879984808204,0.6815890721465,985,31312,13,0.04362908571717952
+6.0,17,16,16,0.9956183057448881,0.6862417608637299,985,23794,14,0.04372154142656909
+24.0,17,17,17,0.9988283538371412,0.7023472218079871,985,14205,16,0.04120719777550055
