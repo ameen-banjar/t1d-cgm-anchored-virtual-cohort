@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from t1d_virtual_cohort.diurnal import _coverage
 from t1d_virtual_cohort.matching import match_members
 from t1d_virtual_cohort.metrics import gmi_percent, risk_indices
 from t1d_virtual_cohort.pipeline import _add_robust_verdict
@@ -19,6 +20,17 @@ class CoreTests(unittest.TestCase):
         high = risk_indices([220, 250, 280])
         self.assertGreater(low[0], low[1])
         self.assertGreater(high[1], high[0])
+
+    def test_coverage_counts_missing_calendar_days(self):
+        day_one = pd.date_range("2026-01-01", periods=24, freq="15min")
+        day_three = pd.date_range("2026-01-03", periods=24, freq="15min")
+        trace = pd.DataFrame(
+            {
+                "timestamp": day_one.append(day_three),
+                "glucose_mgdl": 120.0,
+            }
+        )
+        self.assertAlmostEqual(_coverage(trace, 0, 6, 15), 2.0 / 3.0)
 
     def test_tost_handles_zero_variance(self):
         result = paired_tost([1, 2, 3], [1, 2, 3], margin=0.5)

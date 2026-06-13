@@ -18,10 +18,15 @@ def _coverage(
     end_hour: int,
     expected_interval_minutes: int,
 ) -> float:
-    days = df["timestamp"].dt.date.nunique()
+    timestamps = df["timestamp"].dropna()
+    if timestamps.empty:
+        return np.nan
+    first_day = timestamps.dt.date.min()
+    last_day = timestamps.dt.date.max()
+    days = (last_day - first_day).days + 1
     expected_per_day = (end_hour - start_hour) * 60 / expected_interval_minutes
     observed = _window(df, start_hour, end_hour)["timestamp"].nunique()
-    return float(observed / (expected_per_day * days)) if days else np.nan
+    return float(observed / (expected_per_day * days))
 
 
 def compute_diurnal_diagnostics(
@@ -79,4 +84,3 @@ def compute_diurnal_diagnostics(
             }
         )
     return pd.DataFrame(rows)
-

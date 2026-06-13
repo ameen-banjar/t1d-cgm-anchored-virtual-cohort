@@ -9,6 +9,7 @@ data/raw/real_cgm/*
 !data/raw/real_cgm/README.md
 data/raw/virtual_traces/*
 !data/raw/virtual_traces/README.md
+data/raw/real_summary.csv
 
 outputs/private/
 outputs/demo/
