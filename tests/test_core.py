@@ -7,7 +7,10 @@ import pandas as pd
 from t1d_virtual_cohort.diurnal import _coverage
 from t1d_virtual_cohort.matching import match_members
 from t1d_virtual_cohort.metrics import gmi_percent, risk_indices
-from t1d_virtual_cohort.pipeline import _add_robust_verdict
+from t1d_virtual_cohort.pipeline import (
+    _add_robust_verdict,
+    _diurnal_distribution_summary,
+)
 from t1d_virtual_cohort.statistics import paired_tost
 
 
@@ -31,6 +34,16 @@ class CoreTests(unittest.TestCase):
             }
         )
         self.assertAlmostEqual(_coverage(trace, 0, 6, 15), 2.0 / 3.0)
+
+    def test_coverage_cannot_exceed_one_with_extra_readings(self):
+        timestamps = pd.date_range("2026-01-01", periods=48, freq="7min")
+        trace = pd.DataFrame(
+            {
+                "timestamp": timestamps,
+                "glucose_mgdl": 120.0,
+            }
+        )
+        self.assertEqual(_coverage(trace, 0, 6, 15), 1.0)
 
     def test_tost_handles_zero_variance(self):
         result = paired_tost([1, 2, 3], [1, 2, 3], margin=0.5)
@@ -70,6 +83,30 @@ class CoreTests(unittest.TestCase):
         _add_robust_verdict(result)
         self.assertFalse(result["cluster_bootstrap_equivalent"])
         self.assertEqual(result["robust_verdict"], "Not robust")
+
+    def test_diurnal_distribution_summary_includes_medians_and_extremes(self):
+        diurnal = pd.DataFrame(
+            {
+                "qualified": [True, True, False],
+                "real_nocturnal_lbgi": [1.0, 3.0, 100.0],
+                "virtual_nocturnal_lbgi": [2.0, 2.0, 100.0],
+                "real_nocturnal_hbgi": [4.0, 8.0, 100.0],
+                "virtual_nocturnal_hbgi": [1.0, 1.0, 100.0],
+                "real_dawn_lbgi": [2.0, 4.0, 100.0],
+                "virtual_dawn_lbgi": [1.0, 1.0, 100.0],
+                "real_dawn_hbgi": [5.0, 9.0, 100.0],
+                "virtual_dawn_hbgi": [2.0, 2.0, 100.0],
+            }
+        )
+        summary = _diurnal_distribution_summary(diurnal)
+        row = summary[
+            (summary["window"] == "nocturnal")
+            & (summary["metric"] == "hbgi")
+            & (summary["source"] == "real")
+        ].iloc[0]
+        self.assertEqual(row["n"], 2)
+        self.assertEqual(row["median"], 6.0)
+        self.assertEqual(row["maximum"], 8.0)
 
     def test_committed_virtual_cohort_is_simulator_only_and_portable(self):
         path = Path(__file__).parents[1] / "data/derived/virtual_profile_summary.csv"

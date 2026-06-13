@@ -74,7 +74,9 @@ def read_trace(path: str | Path) -> pd.DataFrame:
     out = df[[time_col, glucose_col]].rename(
         columns={time_col: "timestamp", glucose_col: "glucose_mgdl"}
     )
-    out["timestamp"] = pd.to_datetime(out["timestamp"], errors="coerce")
+    out["timestamp"] = pd.to_datetime(
+        out["timestamp"], errors="coerce", format="mixed"
+    )
     out["glucose_mgdl"] = pd.to_numeric(out["glucose_mgdl"], errors="coerce")
     return (
         out.dropna()
@@ -104,4 +106,3 @@ def index_virtual_traces(directory: str | Path) -> dict[tuple[str, str], Path]:
         virtual_id = path.name.split("_V0", 1)[0]
         index[(virtual_id, path.parent.name)] = path
     return index
-

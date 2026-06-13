@@ -24,5 +24,7 @@ manuscript/*.log
 manuscript/*.out
 manuscript/*.run.xml
 
+manuscript/Real_Patient_Data/
+manuscript/Comprehensive_Simulations_V01_V06/
 manuscript
 release/

@@ -109,6 +109,57 @@ def _diurnal_rows(
     return pd.DataFrame(rows)
 
 
+def _diurnal_threshold_sensitivity(
+    diurnal: pd.DataFrame,
+    margins: dict,
+    thresholds: list[float],
+    replicates: int,
+    seed: int,
+) -> pd.DataFrame:
+    tables = []
+    for threshold in thresholds:
+        threshold_data = diurnal.copy()
+        threshold_data["qualified"] = (
+            (threshold_data["nocturnal_completeness"] >= threshold)
+            & (threshold_data["dawn_completeness"] >= threshold)
+        )
+        table = _diurnal_rows(threshold_data, margins, replicates, seed)
+        table.insert(0, "completeness_threshold", threshold)
+        tables.append(table)
+    return pd.concat(tables, ignore_index=True)
+
+
+def _diurnal_distribution_summary(diurnal: pd.DataFrame) -> pd.DataFrame:
+    qualified = diurnal[diurnal["qualified"]]
+    rows = []
+    for window in ["nocturnal", "dawn"]:
+        for metric in ["lbgi", "hbgi"]:
+            real = qualified[f"real_{window}_{metric}"]
+            virtual = qualified[f"virtual_{window}_{metric}"]
+            difference = real - virtual
+            for source, values in [
+                ("real", real),
+                ("virtual", virtual),
+                ("real_minus_virtual", difference),
+            ]:
+                rows.append(
+                    {
+                        "window": window,
+                        "metric": metric,
+                        "source": source,
+                        "n": int(values.notna().sum()),
+                        "mean": float(values.mean()),
+                        "sd": float(values.std(ddof=1)),
+                        "median": float(values.median()),
+                        "q1": float(values.quantile(0.25)),
+                        "q3": float(values.quantile(0.75)),
+                        "minimum": float(values.min()),
+                        "maximum": float(values.max()),
+                    }
+                )
+    return pd.DataFrame(rows)
+
+
 def _format_p(value: float) -> str:
     if value < 1e-16:
         return r"$<10^{-16}$"
@@ -188,7 +239,7 @@ def _write_margin_latex(margins: dict, path: Path) -> None:
     lines = [
         r"\begin{table}[!t]",
         r"\centering",
-        r"\caption{Prespecified equivalence margins. Percentage metrics use percentage points.}",
+        r"\caption{Study-specified equivalence margins. Percentage metrics use percentage points.}",
         r"\label{tab:margins}",
         r"\begin{tabular}{lrl}",
         r"\toprule",
@@ -311,6 +362,20 @@ def run_analysis(
             bootstrap["seed"],
         )
         diurnal_table.to_csv(tables / "diurnal_equivalence.csv", index=False)
+        sensitivity = _diurnal_threshold_sensitivity(
+            diurnal,
+            config["diurnal_margins"],
+            [0.60, 0.70, 0.80, 0.90],
+            bootstrap["replicates"],
+            bootstrap["seed"],
+        )
+        sensitivity.to_csv(
+            tables / "diurnal_threshold_sensitivity.csv", index=False
+        )
+        distributions = _diurnal_distribution_summary(diurnal)
+        distributions.to_csv(
+            tables / "diurnal_distribution_summary.csv", index=False
+        )
         summary["diurnal_n"] = int(diurnal["qualified"].sum())
         plot_diurnal(diurnal, figures)
         _write_tost_latex(

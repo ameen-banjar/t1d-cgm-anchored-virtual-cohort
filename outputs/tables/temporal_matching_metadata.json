@@ -1,0 +1,7 @@
+{
+  "seed": 2026,
+  "development_n": 275,
+  "validation_n": 207,
+  "selected_model": "plus_window_tar",
+  "selection_criterion": "Sum of absolute development-set mean biases divided by metric-specific equivalence margins"
+}

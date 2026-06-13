@@ -25,7 +25,12 @@ def _coverage(
     last_day = timestamps.dt.date.max()
     days = (last_day - first_day).days + 1
     expected_per_day = (end_hour - start_hour) * 60 / expected_interval_minutes
-    observed = _window(df, start_hour, end_hour)["timestamp"].nunique()
+    if not expected_per_day.is_integer():
+        raise ValueError("Window length must be divisible by the expected interval")
+    expected_per_day = int(expected_per_day)
+    window_timestamps = _window(df, start_hour, end_hour)["timestamp"].drop_duplicates()
+    observed_per_day = window_timestamps.groupby(window_timestamps.dt.date).nunique()
+    observed = observed_per_day.clip(upper=expected_per_day).sum()
     return float(observed / (expected_per_day * days))
 
 

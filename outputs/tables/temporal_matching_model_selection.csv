@@ -1,0 +1,7 @@
+model,development_n,development_score,features
+plus_window_tar,275,5.146813767366151,"mean_glucose_mgdl,cv_percent,tir_percent,nocturnal_tar,dawn_tar"
+plus_means_and_tar,275,5.719179823052368,"mean_glucose_mgdl,cv_percent,tir_percent,nocturnal_mean,dawn_mean,nocturnal_tar,dawn_tar"
+plus_dawn_mean,275,7.079472902795368,"mean_glucose_mgdl,cv_percent,tir_percent,dawn_mean"
+plus_window_means,275,7.123896206003984,"mean_glucose_mgdl,cv_percent,tir_percent,nocturnal_mean,dawn_mean"
+plus_nocturnal_mean,275,7.456687699553773,"mean_glucose_mgdl,cv_percent,tir_percent,nocturnal_mean"
+baseline_3d,275,7.578568693238934,"mean_glucose_mgdl,cv_percent,tir_percent"
