@@ -1,0 +1,17 @@
+{
+  "stage1_n": 719,
+  "virtual_profiles": 180,
+  "base_virtual_subjects": 30,
+  "selected_profiles": 76,
+  "mean_matching_distance": 0.05762112442527581,
+  "median_matching_distance": 0.052100105445450066,
+  "excellent_percent": 93.3240611961057,
+  "good_percent": 5.980528511821975,
+  "moderate_percent": 0.6954102920723227,
+  "matching_features": [
+    "mean_glucose_mgdl",
+    "cv_percent",
+    "tir_percent"
+  ],
+  "diurnal_n": 656
+}

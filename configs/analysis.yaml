@@ -1,0 +1,36 @@
+matching:
+  features:
+    - mean_glucose_mgdl
+    - cv_percent
+    - tir_percent
+  normalization: minmax
+  excellent_distance: 0.10
+  good_distance: 0.20
+
+quality_control:
+  minimum_monitoring_days: 14
+  minimum_raw_density: 0.70
+  interpolation_limit_minutes: 60
+  diurnal_minimum_completeness: 0.70
+  expected_interval_minutes: 15
+  nocturnal_window: [0, 6]
+  dawn_window: [4, 8]
+
+equivalence_margins:
+  mean_glucose_mgdl: 10.0
+  cv_percent: 5.0
+  tir_percent: 5.0
+  gmi_percent: 0.5
+  tbr_percent: 3.0
+  tar_percent: 5.0
+  lbgi: 1.0
+  hbgi: 2.0
+
+diurnal_margins:
+  lbgi: 1.0
+  hbgi: 2.0
+
+bootstrap:
+  replicates: 2000
+  seed: 2026
+

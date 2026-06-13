@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "A CGM-Anchored Virtual Cohort for Type 1 Diabetes"
+message: "Please cite the archived software release and associated study."
+type: software
+version: 0.1.0
+authors:
+  - family-names: "Banjar"
+    given-names: "Ameen"
+year: 2026
+license: MIT
+repository-code: "https://github.com/ameen-banjar/t1d-cgm-anchored-virtual-cohort"
+keywords:
+  - type 1 diabetes
+  - continuous glucose monitoring
+  - virtual cohort
+  - equivalence testing
+  - diurnal risk
