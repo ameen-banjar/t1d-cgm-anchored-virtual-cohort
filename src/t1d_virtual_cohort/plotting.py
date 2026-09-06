@@ -53,9 +53,9 @@ def plot_matching_overview(
     _setup()
     fig, axes = plt.subplots(1, 2, figsize=(7.16, 3.4))
 
-    # (A) Distance histogram — blue fill + hatch for grayscale printing
+    # (A) Distance histogram — solid blue, no hatch (histogram shape carries info)
     axes[0].hist(matches["distance"], bins=30, color="#4472C4", edgecolor="white",
-                 linewidth=0.5, hatch="//", alpha=0.85)
+                 linewidth=0.5)
     axes[0].axvline(excellent, color="#C00000", linestyle="--", linewidth=1.4,
                     label=f"Excellent ≤{excellent:.2f}")
     axes[0].axvline(good, color="#7F6000", linestyle=":", linewidth=1.4,
