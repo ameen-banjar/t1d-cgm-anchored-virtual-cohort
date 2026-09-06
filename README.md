@@ -15,8 +15,8 @@ It does not contain the unpublished manuscript or participant-level CGM data.
 - `configs/analysis.yaml`: matching features, quality-control rules,
   equivalence margins, and bootstrap settings.
 - `data/derived/virtual_profile_summary.csv`: 180 simulator-derived virtual
-  cohort members from 30 UVA/Padova-Simglucose base subjects and six
-  treatment/variability scenarios.
+  cohort members from 30 UVA/Padova-Simglucose base subjects (25 contributed
+  at least one selected profile) and six treatment/variability scenarios.
 - `outputs/`: aggregate result tables and figures. These contain no
   participant identifiers or participant-level rows.
 - `tests/`: focused tests for matching, risk metrics, TOST, and robust
@@ -48,7 +48,7 @@ reproduction additionally requires the virtual traces.
 | --- | --- |
 | `matching.py` | Joint normalization, nearest-member selection, and feature ablation |
 | `metrics.py` | GMI, TIR/TBR/TAR, LBGI, and HBGI calculations |
-| `statistics.py` | Paired TOST and member-cluster bootstrap intervals |
+| `statistics.py` | Paired TOST, member-cluster bootstrap, and base-physiology bootstrap intervals |
 | `diurnal.py` | Coverage-qualified nocturnal and dawn validation |
 | `pipeline.py` | End-to-end analysis, private outputs, tables, and figures |
 | `plotting.py` | Matching, agreement, ablation, and diurnal figures |
@@ -163,8 +163,8 @@ and creates a compressed archive without absolute local paths. The
 
 - Stage-1 cohort: **719**
 - Coverage-qualified diurnal cohort: **482**
-- Virtual library: **180 profiles from 30 simulator subjects**
-- Selected Top-1 profiles: **76**
+- Virtual library: **180 profiles from 30 simulator subjects (25 contributed ≥1 selected profile)**
+- Selected nearest-member profiles: **76**
 - Mean normalized matching distance: **0.058**
 - Distance below 0.10: **93.3%**
 - Whole-day mean-difference equivalence: supported within specified margins

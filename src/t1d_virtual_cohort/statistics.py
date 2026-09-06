@@ -36,6 +36,47 @@ def paired_tost(real, virtual, margin: float, alpha: float = 0.05) -> dict:
     }
 
 
+def base_physiology_bootstrap_ci(
+    differences,
+    base_subjects,
+    replicates: int = 5000,
+    seed: int = 2026,
+    confidence: float = 0.90,
+) -> tuple[float, float]:
+    """Cluster bootstrap resampling at the base-physiology level.
+
+    Resamples the set of unique base subjects (with replacement) rather than
+    individual member-clusters, accounting for shared ancestry across the six
+    treatment variants derived from each base subject.  Only base subjects that
+    contributed at least one selected profile are included (typically 25 of the
+    30-subject simulator library).
+
+    Args:
+        differences: array of (real - virtual) differences, one per match.
+        base_subjects: array of base-subject identifiers aligned with
+            ``differences`` (e.g. ``'adult#003'``).
+        replicates: number of bootstrap replicates (default 5000).
+        seed: random-number-generator seed for reproducibility (default 2026).
+        confidence: symmetric CI coverage (default 0.90).
+
+    Returns:
+        (lo, hi): lower and upper confidence-interval bounds.
+    """
+    values = np.asarray(differences, dtype=float)
+    labels = np.asarray(base_subjects)
+    keep = np.isfinite(values)
+    values, labels = values[keep], labels[keep]
+    unique = np.unique(labels)
+    grouped = {b: values[labels == b] for b in unique}
+    rng = np.random.default_rng(seed)
+    estimates = np.empty(replicates)
+    for index in range(replicates):
+        sampled = rng.choice(unique, size=len(unique), replace=True)
+        estimates[index] = np.concatenate([grouped[b] for b in sampled]).mean()
+    tail = (1.0 - confidence) / 2.0
+    return tuple(np.quantile(estimates, [tail, 1.0 - tail]).astype(float))
+
+
 def cluster_bootstrap_mean_ci(
     differences,
     clusters,
