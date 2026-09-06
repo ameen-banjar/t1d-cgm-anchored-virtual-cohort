@@ -53,13 +53,13 @@ def plot_matching_overview(
     _setup()
     fig, axes = plt.subplots(1, 2, figsize=(7.16, 3.4))
 
-    # (A) Distance histogram — grayscale: dark gray fill, black edge
-    axes[0].hist(matches["distance"], bins=30, color="#404040", edgecolor="white",
-                 linewidth=0.5)
-    axes[0].axvline(excellent, color="black", linestyle="--", linewidth=1.2,
-                    label=f"Excellent ({excellent:.2f})")
-    axes[0].axvline(good, color="black", linestyle=":", linewidth=1.2,
-                    label=f"Good ({good:.2f})")
+    # (A) Distance histogram — blue fill + hatch for grayscale printing
+    axes[0].hist(matches["distance"], bins=30, color="#4472C4", edgecolor="white",
+                 linewidth=0.5, hatch="//", alpha=0.85)
+    axes[0].axvline(excellent, color="#C00000", linestyle="--", linewidth=1.4,
+                    label=f"Excellent ≤{excellent:.2f}")
+    axes[0].axvline(good, color="#7F6000", linestyle=":", linewidth=1.4,
+                    label=f"Good ≤{good:.2f}")
     axes[0].set_xlabel("Normalized Euclidean distance")
     axes[0].set_ylabel("Participants")
     axes[0].set_title("(A) 3D matching distance")
@@ -69,15 +69,15 @@ def plot_matching_overview(
     counts = matches["scenario"].value_counts().reindex(order)
     short = [str(value).split("_", 1)[0] for value in order]
     max_count = int(counts.values.max())
-    # grayscale: medium gray bars
-    axes[1].bar(short, counts.values, color="#707070", edgecolor="black", linewidth=0.7)
+    # green bars + hatch for grayscale legibility
+    axes[1].bar(short, counts.values, color="#70AD47", edgecolor="black",
+                linewidth=0.8, hatch="..")
     for index, value in enumerate(counts.values):
-        axes[1].text(index, value + max_count * 0.04, str(value),
+        axes[1].text(index, value + max_count * 0.05, str(value),
                      ha="center", fontsize=9, fontweight="bold")
     axes[1].set_ylabel("Nearest-member assignments")
     axes[1].set_title("(B) Scenario utilization")
-    # Extra headroom so bar labels don't clip the top border
-    axes[1].set_ylim(0, max_count * 1.20)
+    axes[1].set_ylim(0, max_count * 1.22)
     _save(fig, output, "fig1_matching_overview")
 
 
@@ -93,9 +93,9 @@ def plot_agreement_grid(
         virtual = matches[f"virtual_{metric}"].to_numpy(float)
         low = min(real.min(), virtual.min())
         high = max(real.max(), virtual.max())
-        # Scatter: filled circles, grayscale
-        axes[0, column].scatter(real, virtual, s=8, alpha=0.40,
-                                color="#404040", marker="o")
+        # Scatter: blue filled circles + identity line
+        axes[0, column].scatter(real, virtual, s=8, alpha=0.45,
+                                color="#4472C4", marker="o", linewidths=0)
         axes[0, column].plot([low, high], [low, high], "k--", linewidth=1.0)
         axes[0, column].set_xlabel(f"Real {LABELS[metric]}")
         axes[0, column].set_ylabel(f"Virtual {LABELS[metric]}")
@@ -105,20 +105,20 @@ def plot_agreement_grid(
         difference = real - virtual
         bias = difference.mean()
         sd = difference.std(ddof=1)
-        # Bland-Altman: open triangles to distinguish from identity scatter
+        # Bland-Altman: orange open triangles (colour + shape for grayscale)
         axes[1, column].scatter(
-            average, difference, s=8, alpha=0.40,
-            color="#606060", marker="^"
+            average, difference, s=10, alpha=0.45,
+            color="#ED7D31", marker="^", linewidths=0
         )
-        axes[1, column].axhline(bias, color="black", linewidth=1.2,
+        axes[1, column].axhline(bias, color="#C00000", linewidth=1.3,
                                 label=f"Bias {bias:+.2f}")
         axes[1, column].axhline(
-            bias + 1.96 * sd, color="black", linestyle="--", linewidth=0.9,
-            label=f"+1.96SD {bias + 1.96*sd:+.2f}"
+            bias + 1.96 * sd, color="#404040", linestyle="--", linewidth=1.0,
+            label=f"+1.96 SD"
         )
         axes[1, column].axhline(
-            bias - 1.96 * sd, color="black", linestyle="--", linewidth=0.9,
-            label=f"−1.96SD {bias - 1.96*sd:+.2f}"
+            bias - 1.96 * sd, color="#404040", linestyle="--", linewidth=1.0,
+            label=f"−1.96 SD"
         )
         axes[1, column].set_xlabel("Pair mean")
         axes[1, column].set_ylabel("Real − virtual")
@@ -145,18 +145,18 @@ def plot_diurnal(diurnal: pd.DataFrame, output: Path) -> None:
         difference = real - virtual
         bias = difference.mean()
         sd = difference.std(ddof=1)
-        # Open squares, grayscale-safe
-        axis.scatter(average, difference, s=8, alpha=0.40,
-                     color="#505050", marker="s")
-        axis.axhline(bias, color="black", linewidth=1.4,
+        # Brown open squares for diurnal (colour + shape)
+        axis.scatter(average, difference, s=10, alpha=0.45,
+                     color="#A0522D", marker="s", linewidths=0)
+        axis.axhline(bias, color="#C00000", linewidth=1.3,
                      label=f"Bias {bias:+.2f}")
         axis.axhline(
-            bias + 1.96 * sd, color="black", linestyle="--", linewidth=1.0,
-            label=f"+1.96SD"
+            bias + 1.96 * sd, color="#404040", linestyle="--", linewidth=1.0,
+            label="+1.96 SD"
         )
         axis.axhline(
-            bias - 1.96 * sd, color="black", linestyle="--", linewidth=1.0,
-            label=f"−1.96SD"
+            bias - 1.96 * sd, color="#404040", linestyle="--", linewidth=1.0,
+            label="−1.96 SD"
         )
         axis.set_title(f"({chr(65 + index)}) {title}")
         axis.set_xlabel("Pair mean")
@@ -172,14 +172,14 @@ def plot_ablation(ablation: pd.DataFrame, output: Path) -> None:
         LABELS[value].replace(" (", "\n(") for value in ablation["removed_feature"]
     ]
     values = ablation["reassigned_percent"].to_numpy()
-    # Grayscale bar with hatch pattern for print clarity
-    axis.bar(labels, values, color="#606060", edgecolor="black", linewidth=0.7,
+    # Blue bars + hatch for grayscale legibility
+    axis.bar(labels, values, color="#5B9BD5", edgecolor="black", linewidth=0.8,
              hatch="//")
     for index, value in enumerate(values):
-        axis.text(index, value + 2.0, f"{value:.1f}%",
+        axis.text(index, value + 2.5, f"{value:.1f}%",
                   ha="center", fontsize=9, fontweight="bold")
     axis.set_ylabel("Nearest-member assignments changed (%)")
-    axis.set_ylim(0, 110)   # headroom for labels at top of bars
+    axis.set_ylim(0, 110)
     axis.tick_params(axis="x", rotation=0)
     axis.set_title("Feature-ablation sensitivity")
     _save(fig, output, "fig3_feature_ablation")
