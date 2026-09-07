@@ -1,0 +1,177 @@
+# ============================================================
+# Simulation Manifest — Virtual Library Construction
+# CGM-Anchored Virtual Cohort for T1D (JBHI-04134-2026)
+# ============================================================
+# This file documents every parameter used to generate the
+# 180-member virtual library (30 base × 6 scenarios).
+# Addresses Reviewer 1 comment 5.
+
+simulator:
+  package: simglucose
+  version: "0.2.11"
+  model: UVA/Padova 2008
+  model_notes: >
+    Implements the Dalla Man et al. (2007/2008) single-meal
+    and multi-meal Type 1 diabetes metabolic model.
+    No circadian variation in insulin sensitivity.
+    No dawn-phenomenon mechanism.
+    No hypoglycaemia rescue protocol (rescue_carbohydrate = 0,
+    basal_suspension = false).
+  reference: "Dalla Man C et al. IEEE TBME 2007;54(10):1740-9"
+  patient_data_file: "simglucose/params/vpatient_params.csv"
+  quest_data_file:   "simglucose/params/Quest.csv"
+
+patients:
+  total: 30
+  composition:
+    adults:      10   # adult#001 – adult#010
+    adolescents: 10   # adolescent#001 – adolescent#010
+    children:    10   # child#001 – child#010
+  adult_age_range_years:  "26 – 68"
+  adult_bw_range_kg:      "63.0 – 111.1"
+  adult_cr_range:         "5 – 22 g/U"
+  adult_cf_range:         "7.6 – 42.7 mg/dL per U"
+  adult_tdi_range_U_day:  "33.8 – 68.3"
+  adult_basal_glucose_range_mgdl: "135.3 – 152.8"
+
+sensor:
+  name: Dexcom
+  sample_time_minutes: 3
+  noise_model: AR(1) with PACF=0.70, gamma=-0.5444, lambda=15.9574
+  noise_reference: "Breton M, Kovatchev B. J Diabetes Sci Technol 2008"
+  glucose_range_mgdl: [39, 600]
+  notes: >
+    Sensor noise interpolated from 15-min AR(1) model to 3-min
+    resolution via cubic spline. Output resampled to 15-min for
+    comparison with Granada (15-min nominal) and 5-min for Manchester.
+
+pump:
+  name: Cozmo
+  sample_time_minutes: 1
+  min_bolus_U: 0.0
+  max_bolus_U: 75.0
+  basal_increment_U_min: 0.05
+
+controller:
+  type: Basal-Bolus (BBController)
+  basal_rule: "u2ss * BW / 6000   [U/min]  (steady-state open-loop basal)"
+  bolus_rule: >
+    bolus [U] = (meal_g / CR) + max(0, glucose - target) / CF
+    where CR and CF are patient-specific from Quest.csv.
+    Bolus is administered as a rate over one sample_time step.
+    Correction bolus triggered only when glucose > 150 mg/dL.
+  target_glucose_mgdl: 150
+  meal_announcement: perfect (announced meals at time of eating)
+  hypoglycaemia_rescue: none
+
+simulation:
+  washout_hours: 48
+  simulation_days: 90
+  total_simulated_days_per_profile: 90
+  realizations_per_profile: 1
+  meal_schedule: RandomScenario (stochastic, synchronized seed per scenario family)
+  meal_timing:
+    breakfast:  "05:00–09:00 (mu=07:00, sigma=60 min), P=0.95"
+    snack1:     "09:00–10:00 (mu=09:30, sigma=30 min), P=0.30"
+    lunch:      "10:00–14:00 (mu=12:00, sigma=60 min), P=0.95"
+    snack2:     "14:00–16:00 (mu=15:00, sigma=30 min), P=0.30"
+    dinner:     "16:00–20:00 (mu=18:00, sigma=60 min), P=0.95"
+    snack3:     "20:00–23:00 (mu=21:30, sigma=30 min), P=0.30"
+  meal_size_grams:
+    breakfast:  "N(45, 10), truncated > 0"
+    snack:      "N(10, 5),  truncated > 0"
+    lunch:      "N(70, 10), truncated > 0"
+    dinner:     "N(80, 10), truncated > 0"
+
+scenarios:
+  n_families: 6
+  description: >
+    Each base subject is simulated under 6 treatment-conditioned scenarios.
+    Multipliers are relative to the base subject's reference regimen.
+    A synchronized stochastic meal seed is used across all 6 variants of
+    the same base subject so that meal timing/size differences are not a
+    confound between scenarios.
+  families:
+    V01:
+      label: Reference dosing
+      basal_multiplier: 1.00
+      bolus_cf_multiplier: 1.00
+      variability: standard
+    V02:
+      label: Safety-tuned dosing
+      basal_multiplier: 0.90
+      bolus_cf_multiplier: 1.05
+      variability: standard
+    V03:
+      label: Hypoglycaemic stress
+      basal_multiplier: 1.20
+      bolus_cf_multiplier: 1.15
+      variability: standard
+    V04:
+      label: Hyperglycaemic stress
+      basal_multiplier: 0.75
+      bolus_cf_multiplier: 0.85
+      variability: standard
+    V05:
+      label: Increased variability
+      basal_multiplier: 1.00
+      bolus_cf_multiplier: 1.00
+      variability: stochastic_high
+      notes: Stochastic meal-size sigma increased
+    V06:
+      label: Reduced variability
+      basal_multiplier: 1.00
+      bolus_cf_multiplier: 1.00
+      variability: stochastic_low
+      notes: Stochastic meal-size sigma decreased
+
+library:
+  primary:
+    label: full_180
+    base_subjects: 30
+    scenarios_per_subject: 6
+    total_profiles: 180
+    age_groups: [adults, adolescents, children]
+    rationale: >
+      Phenotypic diversity across simulator age classes is necessary
+      for adequate real-participant coverage. An adult-only sensitivity
+      (n=60) produced whole-day equivalence failure in 6/8 metrics
+      (mean distance 0.213), confirming that the physiological parameter
+      range spanned by adolescent and child virtual subjects is needed
+      to represent adult T1D phenotypic heterogeneity in the Granada cohort.
+  sensitivity:
+    label: adult_60
+    base_subjects: 10
+    scenarios_per_subject: 6
+    total_profiles: 60
+    age_groups: [adults]
+    rationale: >
+      Motivated by Reviewer 2 comment 7. Run as a sensitivity analysis
+      to quantify the impact of restricting to adult-labelled subjects.
+
+known_structural_limitations:
+  - "No circadian variation in insulin sensitivity (UVA/Padova 2008 limitation)"
+  - "No dawn-phenomenon mechanism"
+  - "No hypoglycaemia rescue (rescue carbohydrates, basal suspension)"
+  - "Open-loop control: no closed-loop or hybrid-closed-loop modes"
+  - "Single stochastic meal realization per 90-day profile"
+  - "Sensor noise model calibrated to Dexcom; may not reflect all CGM devices"
+  - >
+    Nocturnal HBGI near zero in virtual profiles is consistent with the
+    absence of circadian insulin-sensitivity variation; this constitutes a
+    quantified simulator-specific boundary, not a newly identified
+    physiological mechanism.
+
+reproducibility:
+  seed_strategy: >
+    For each base subject, a single fixed integer seed derived from the
+    subject index (1–30) is used for the stochastic meal schedule
+    (RandomScenario). This seed is held constant across all six scenario
+    variants of that subject, ensuring that meal timing and the base random
+    realization are identical across V01–V06 for the same individual.
+    The only between-scenario variation in the meal model is the meal-size
+    sigma preset (standard for V01–V04; stochastic_high for V05; stochastic_low
+    for V06). This design isolates the effect of the dosing/variability
+    specification from meal-schedule sampling noise.
+  environment_file: environment.yml
+  entry_point: "bash scripts/run_full_analysis.sh"

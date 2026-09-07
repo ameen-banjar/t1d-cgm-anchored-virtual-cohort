@@ -1,0 +1,14 @@
+Cohort,Scenario family,Assignments (N),Unique virtual profiles,Unique base physiologies
+Granada,V01 (Clinical),138,17,17
+Granada,V02 (Best-calib.),113,13,13
+Granada,V03 (Hypoglycaemic),154,11,11
+Granada,V04 (Hyperglycaemic),177,19,19
+Granada,V05 (Best-bolus),0,0,0
+Granada,V06 (CV-optimal),137,16,16
+Granada,Total,719,76,25
+Manchester,V01 (Clinical),4,3,3
+Manchester,V02 (Best-calib.),2,2,2
+Manchester,V03 (Hypoglycaemic),4,3,3
+Manchester,V04 (Hyperglycaemic),4,3,3
+Manchester,V06 (CV-optimal),2,2,2
+Manchester,Total,16,13,10

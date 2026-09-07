@@ -107,18 +107,17 @@ The command writes participant-level files only to the ignored
 `outputs/private/` directory and regenerates aggregate outputs elsewhere
 under `outputs/`.
 
-The post hoc development/validation comparison of temporal matching features
-can then be reproduced with:
+The repeated cross-validated temporal-matching evaluation (5-fold × 10-rep,
+50 held-out fold evaluations) can then be reproduced with:
 
 ```bash
-PYTHONPATH=src python3 scripts/evaluate_temporal_matching.py \
-  --real-summary data/raw/real_summary.csv \
-  --diurnal-subjects outputs/private/diurnal_subject_level.csv \
-  --real-traces data/raw/real_cgm \
-  --virtual-summary data/derived/virtual_profile_summary.csv \
-  --virtual-traces data/raw/virtual_traces \
-  --output outputs/tables
+PYTHONPATH=src python3 scripts/revision_temporal_cv.py
 ```
+
+This script selects the temporal-matching feature set on each training fold
+and evaluates held-out diurnal biases, replacing the earlier single
+development/validation split. Aggregate results are written to
+`outputs/revision/temporal_cv_results.csv`.
 
 An independent-cohort validation can be run when locally authorized processed
 traces are available:
@@ -171,11 +170,12 @@ and creates a compressed archive without absolute local paths. The
 - Nocturnal/dawn HBGI: not equivalent
 - Nocturnal LBGI: not equivalent
 - Dawn LBGI: paired TOST equivalent, but not robust to cluster bootstrap
-- Temporal-TAR matching reduced held-out HBGI bias but did not achieve
-  equivalence
-- In the independent 17-participant T1D-UOM cohort (`N=16` under primary QC),
-  external transport validation showed the same claim pattern: whole-day
-  equivalence with non-equivalent nocturnal/dawn risk
+- Temporal matching (nocturnal/dawn HBGI features, 5-fold × 10-rep CV):
+  reduced held-out diurnal HBGI bias in all 50 evaluations but did not
+  achieve equivalence; consistent with a simulator-library limitation
+- In the independent T1D-UOM cohort (N=16 quality-qualified):
+  all four whole-day CGM summaries met pre-specified margins under the
+  frozen Granada matching specification (preliminary external consistency check)
 
 Diurnal completeness uses all calendar days from the first through the last
 observation, collapses exact duplicate timestamps, and caps daily counts at
