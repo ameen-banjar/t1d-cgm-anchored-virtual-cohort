@@ -1,6 +1,6 @@
 # CGM-Anchored Virtual Cohort for Type 1 Diabetes
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20677081.svg)](https://doi.org/10.5281/zenodo.20677081)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22654723.svg)](https://doi.org/10.5281/zenodo.22654723)
 
 Open-source analysis and virtual-cohort resources for constructing and
 validating a CGM-anchored cohort in type 1 diabetes.

@@ -11,7 +11,7 @@ license: MIT
 repository-code: "https://github.com/ameen-banjar/t1d-cgm-anchored-virtual-cohort"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.20677081"
+    value: "10.5281/zenodo.22654723"
 keywords:
   - type 1 diabetes
   - continuous glucose monitoring
