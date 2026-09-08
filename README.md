@@ -174,8 +174,9 @@ and creates a compressed archive without absolute local paths. The
   reduced held-out diurnal HBGI bias in all 50 evaluations but did not
   achieve equivalence; consistent with a simulator-library limitation
 - In the independent T1D-UOM cohort (N=16 quality-qualified):
-  all four whole-day CGM summaries met pre-specified margins under the
-  frozen Granada matching specification (preliminary external consistency check)
+  all reported whole-day CGM summaries (three anchors + five diagnostics)
+  met pre-specified margins under the frozen Granada matching specification
+  (preliminary external consistency check)
 
 Diurnal completeness uses all calendar days from the first through the last
 observation, collapses exact duplicate timestamps, and caps daily counts at
