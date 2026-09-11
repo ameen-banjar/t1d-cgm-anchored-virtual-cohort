@@ -1,0 +1,17 @@
+JBHI-04134-2026 Resubmission Package — v0.2.0
+Generated: 2026-09-08
+Zenodo v0.2.0 DOI: 10.5281/zenodo.22654723
+Zenodo concept DOI: 10.5281/zenodo.20677080
+============================================================
+
+01_manuscript.pdf                                     472 KB  md5:79822cc2
+02_supplementary.pdf                                  259 KB  md5:0de97708
+03_response_to_reviewers.pdf                          191 KB  md5:d771fbd8
+04_manuscript_tracked_changes.pdf                     302 KB  md5:15c0b0f1
+05_cover_letter.pdf                                    57 KB  md5:13aee1e5
+06_graphical_abstract.jpg                              43 KB  md5:8bb5ca96
+07_conflict_of_interest.pdf                            34 KB  md5:16ac5fef
+08_consent_form.pdf                                   178 KB  md5:013da22e
+
+STATUS: All DOIs verified. Zenodo v0.2.0 archived and public.
+READY FOR IEEE J-BHI RESUBMISSION (deadline: 13 November 2026).

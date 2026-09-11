@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: "A CGM-Anchored Virtual Cohort for Type 1 Diabetes"
 message: "Please cite the archived software release and associated study."
 type: software
-version: 0.2.0
+version: 0.2.1
 authors:
   - family-names: "Banjar"
     given-names: "Ameen"

@@ -151,7 +151,7 @@ To prepare the simulator-only traces for Zenodo:
 ```bash
 python3 scripts/package_virtual_traces.py \
   /path/to/Comprehensive_Simulations_V01_V06 \
-  --output release/virtual-cohort-traces-v0.2.0.tar.gz
+  --output release/virtual-cohort-traces-v0.2.1.tar.gz
 ```
 
 The script validates that 180 traces are present, writes a checksum manifest,
@@ -188,6 +188,6 @@ the nominal number of 15-minute observations. Sensitivity analyses at
 1. Confirm tests, privacy exclusions, and secret scan.
 2. Push the code repository to GitHub.
 3. Enable GitHub integration in Zenodo.
-4. Publish GitHub release `v0.2.0`.
+4. Publish GitHub release `v0.2.1`.
 5. Archive the full virtual-trace package on Zenodo and record its DOI.
 6. Add the final software/data DOI to the submitted manuscript when allowed.

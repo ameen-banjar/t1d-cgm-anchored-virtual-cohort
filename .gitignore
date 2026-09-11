@@ -29,3 +29,9 @@ manuscript/Comprehensive_Simulations_V01_V06/
 manuscript/Processed_Train_Data_V2/
 manuscript
 release/
+
+# Submission package binaries (archived on Zenodo; checklist text tracked below)
+JBHI_Resubmission_v02/*.pdf
+JBHI_Resubmission_v02/*.jpg
+submission_files/
+jbhi-consent_form_filled.pdf
