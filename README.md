@@ -6,7 +6,7 @@ Open-source analysis and virtual-cohort resources for constructing and
 validating a CGM-anchored cohort in type 1 diabetes.
 
 This repository contains **software and aggregate research artifacts only**.
-It does not contain the unpublished manuscript or participant-level CGM data.
+It does not contain participant-level CGM data.
 
 ## What Is Included
 
@@ -33,7 +33,6 @@ people.
 - Real participant CGM traces or identifiers.
 - Participant-to-virtual-member matches.
 - Participant-level diurnal results.
-- The unpublished manuscript or compiled paper.
 - The full 180 virtual time-series traces, because the CSV collection is
   approximately 719 MB.
 
