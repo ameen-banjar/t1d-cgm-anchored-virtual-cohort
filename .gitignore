@@ -35,3 +35,6 @@ JBHI_Resubmission_v02/*.pdf
 JBHI_Resubmission_v02/*.jpg
 submission_files/
 jbhi-consent_form_filled.pdf
+
+# Submission package (tracked locally, not for public repo)
+JBHI_Resubmission_v02/
