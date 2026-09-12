@@ -118,7 +118,7 @@ and evaluates held-out diurnal biases, replacing the earlier single
 development/validation split. Aggregate results are written to
 `outputs/revision/temporal_cv_results.csv`.
 
-An independent-cohort validation can be run when locally authorized processed
+An external consistency analysis can be run when locally authorized processed
 traces are available:
 
 ```bash
@@ -173,7 +173,7 @@ and creates a compressed archive without absolute local paths. The
   reduced held-out diurnal HBGI bias in all 50 evaluations but did not
   achieve equivalence; consistent with a simulator-library limitation
 - In the independent T1D-UOM cohort (N=16 quality-qualified):
-  all reported whole-day CGM summaries (three anchors + five diagnostics)
+  all reported whole-day CGM summaries (three anchors + derived GMI + four diagnostics)
   met pre-specified margins under the frozen Granada matching specification
   (preliminary external consistency check)
 
